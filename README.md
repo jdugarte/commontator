@@ -5,7 +5,7 @@
 [![Code Climate](https://codeclimate.com/github/lml/commontator/badges/gpa.svg)](https://codeclimate.com/github/lml/commontator)
 [![Code Coverage](https://codeclimate.com/github/lml/commontator/badges/coverage.svg)](https://codeclimate.com/github/lml/commontator)
 
-Commontator is a Rails engine for comments. It is compatible with Rails 3.1+ and Rails 4.
+Commontator is a Rails engine for comments. It is compatible with Rails 3.1+, 4 and 5.
 Being an engine means it is fully functional as soon as you install and
 configure the gem, providing models, views and controllers of its own.
 At the same time, almost anything about it can be configured or customized to suit your needs.
@@ -19,7 +19,7 @@ There are 4 steps you must follow to install commontator:
   Add this line to your application's Gemfile:
 
   ```rb
-  gem 'commontator', '~> 4.11.1'
+  gem 'commontator', '~> 5.1.0'
   ```
 
   And then execute:
@@ -92,6 +92,15 @@ Follow the steps below to add commontator to your models and views:
   ```rb
   acts_as_commontable
   ```
+  if you want the thread and all its comments removed when your commontable model is destroyed pass
+  :destroy as the :dependent option to`acts_as_commontable`:
+
+  ```rb
+  acts_as_commontable dependent: :destroy
+  ```
+
+  instead of `:destroy` you may use any other supported `:dependent` option from rails `has_one`
+  association.
 
 2. Views
 
@@ -132,7 +141,7 @@ That's it! Commontator is now ready for use.
 When you enable subscriptions, emails are sent automatically by Commontator. If sending emails, remember to add your host URL's to your environment files (test.rb, development.rb and production.rb):
 
 ```rb
-config.action_mailer.default_url_options = { :host => "www.example.com" }
+config.action_mailer.default_url_options = { host: "www.example.com" }
 ```
 
 Batch sending through Mailgun is also supported and automatically detected.
@@ -178,7 +187,7 @@ return a relation containing the users that can be mentioned and match the
 query string:
 
 ```rb
-config.user_mentions_proc = lambda { |current_user, thread, query| ... }
+config.user_mentions_proc = ->(current_user, thread, query) { ... }
 ```
 
 Please be aware that with mentions enabled, any registered user
